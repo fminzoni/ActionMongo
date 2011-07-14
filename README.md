@@ -36,7 +36,7 @@ Create cursor obj outside any functions:
 	
     private var cursor:Cursor;
 
-Assign cursor the results of the query.  Pass the query and results objs.  Also a getResults function for when the query is complete:
+Assign cursor the results of the query.  Pass the query and results objs.  Also add getResults function for when the query is complete:
 	
     cursor = collection.find(query, results, getResult);
 
