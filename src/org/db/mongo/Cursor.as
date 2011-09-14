@@ -58,20 +58,19 @@ package org.db.mongo
 			this.queryID = queryID;
 			this.readAll = readAll;
 		}
-		
-		
+						
 		/**
-		 * @brief Send a query when the socket is ready
-		 * @param event Event generated for Event.CONNECT
+		 * @brief Send a query using existing socket
+		 * @param socket opened socket
 		 */
-		internal function sendQuery( event : Event ) : void {
-			var socket : Socket = event.target as Socket;
-			socket.addEventListener( ProgressEvent.SOCKET_DATA, parseReply );
+		public function sendQuery(socket:Socket) : void {
+			if (!socket.hasEventListener(ProgressEvent.SOCKET_DATA))
+				socket.addEventListener( ProgressEvent.SOCKET_DATA, parseReply );			
 			socket.writeBytes( query.toBinaryMsg() );
 			socket.flush();
+			
 		}
-		
-		
+						
 		/**
 		 * @brief Read a response from the socket and extend the list of documents in the cursor
 		 * @param event Event generated for ProgressEvent.SOCKET_DATA
@@ -146,7 +145,8 @@ package org.db.mongo
 					socket.flush();
 					trace( "getting more..." );
 				} else {
-					socket.close();
+					//socket.close();
+					socket.removeEventListener( ProgressEvent.SOCKET_DATA, parseReply );
 					// run a user-defined callback
 					trace( "callback" );
 					if( readAll != null ) {

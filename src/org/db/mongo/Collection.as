@@ -35,23 +35,35 @@ package org.db.mongo
 		private var mongo : Mongo;
 		private var dbName : String;
 		private var collName : String;
+		private var socket : Socket;
+		private var cursor : Cursor;
 		
-		public function Collection( mongo : Mongo, dbName : String, collName : String) {
+		public function Collection( mongo : Mongo, dbName : String, collName : String, socket:Socket ) {
 			this.mongo = mongo;
 			this.dbName = dbName;
 			this.collName = collName;
+			this.cursor = cursor;
+			this.socket = socket;
 		}
 		
-		public function find( query : Object, returnFieldSelector : Object = null, readAll : Function = null ) : Cursor {
+		public function find( query : Document, returnFieldSelector : Document = null, readAll : Function = null ) : Cursor {
 			var queryID : int = mongo.getUniqueID();
 			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + collName, 0, 0, query, returnFieldSelector );
 			var cursor : Cursor = new Cursor( dbName, collName, opquery, queryID, readAll );
-				
-			var socket : Socket = new Socket();
-			socket.addEventListener( Event.CONNECT, cursor.sendQuery );
-			socket.connect( mongo.getCurrentHost(), mongo.getCurrentPort() );
+			cursor.sendQuery(socket);			
 			
 			return cursor;
 		}
+		
+		public function findOne( query : Document, returnFieldSelector : Document = null, readAll : Function = null ) : Cursor {
+			var queryID : int = mongo.getUniqueID();
+			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + collName, 0, 1, query, returnFieldSelector );
+			var cursor : Cursor = new Cursor( dbName, collName, opquery, queryID, readAll );		
+			cursor.sendQuery(socket);
+						
+			return cursor;
+		}
+		
+		
 	}
 }

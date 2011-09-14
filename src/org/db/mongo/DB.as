@@ -23,11 +23,18 @@
 
 package org.db.mongo
 {
+	import flash.events.Event;
+	import flash.net.Socket;
+	
+	import org.db.mongo.mwp.OpQuery;
+
 	public class DB
 	{
 		
 		private var mongo : Mongo;
 		private var dbName : String;
+		private var socket : Socket;
+		private var cursor : Cursor;
 		
 		public function DB( mongo : Mongo, dbName : String ) {
 			this.mongo = mongo;
@@ -35,13 +42,39 @@ package org.db.mongo
 		}
 		
 		/**
+		 * @brief create the socket		
+		 */
+		public function connect():void {
+			socket = new Socket();
+			socket.connect( mongo.getCurrentHost(), mongo.getCurrentPort() );
+		}
+		
+		/**
 		 * @brief Get a collection from the database
 		 * @return A collection from the database
 		 */
 		public function getCollection( collName : String ) : Collection {
-			return new Collection( mongo, dbName, collName );
+			return new Collection( mongo, dbName, collName, socket );
+		}
+				
+		public function getNonce( readAll : Function = null ) : Cursor {
+			var query : Document = new Document();
+			query.put("getnonce",1);
+			var queryID : int = mongo.getUniqueID();
+			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + "$cmd", 0, 1, query );
+			cursor = new Cursor( dbName, "$cmd", opquery, queryID, readAll );
+			cursor.sendQuery(socket);		
+			return cursor;
 		}
 		
+		public function runCommand( cmd : Document, readAll : Function = null ) : Cursor {
+			var queryID : int = mongo.getUniqueID();
+			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + "$cmd", 0, -1, cmd, null );
+			cursor = new Cursor( dbName, "$cmd", opquery, queryID, readAll );				
+			cursor.sendQuery(socket);			
+			return cursor;
+		}
+				
 		/*public function executeCommand() : Object {
 			blah;
 		}*/
