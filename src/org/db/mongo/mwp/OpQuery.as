@@ -25,7 +25,7 @@ package org.db.mongo.mwp
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 	
-	import org.osmf.layout.AbsoluteLayoutFacet;
+	import org.db.mongo.Document;
 	import org.serialization.bson.BSON;
 
 	public class OpQuery implements IRequest
@@ -46,10 +46,10 @@ package org.db.mongo.mwp
 		public var fullCollectionName : String; // cstring
 		public var numberToSkip : int;
 		public var numberToReturn : int;
-		public var query : Object; // document
-		public var returnFieldSelector : Object = null; // document (optional)
+		public var query : Document; // document
+		public var returnFieldSelector : Document = null; // document (optional)
 		
-		public function OpQuery( requestID : int, flags : int, fullCollectionName : String, numberToSkip : int, numberToReturn : int, query : Object, returnFieldSelector : Object = null ) {
+		public function OpQuery( requestID : int, flags : int, fullCollectionName : String, numberToSkip : int, numberToReturn : int, query : Document, returnFieldSelector : Document = null ) {
 			this.requestID = requestID;
 			this.flags = flags;
 			this.fullCollectionName = fullCollectionName;

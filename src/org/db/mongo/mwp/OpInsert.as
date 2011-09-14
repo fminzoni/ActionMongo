@@ -26,6 +26,7 @@ package org.db.mongo.mwp
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 	
+	import org.db.mongo.Document;
 	import org.serialization.bson.BSON;
 
 	public class OpInsert implements IRequest
@@ -58,7 +59,7 @@ package org.db.mongo.mwp
 			bin.writeInt( 0 ), // ZERO
 			bin.writeUTFBytes( fullCollectionName );
 			bin.writeByte( 0 ); // write the cstring terminator
-			for each( var obj : Object in documents ) {
+			for each( var obj : Document in documents ) {
 				bin.writeBytes( BSON.encode( obj ) );
 			}
 			

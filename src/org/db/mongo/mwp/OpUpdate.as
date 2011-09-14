@@ -26,6 +26,7 @@ package org.db.mongo.mwp
 	import flash.utils.ByteArray;
 	import flash.utils.Endian;
 	
+	import org.db.mongo.Document;
 	import org.serialization.bson.BSON;
 
 	public class OpUpdate implements IRequest
@@ -39,10 +40,10 @@ package org.db.mongo.mwp
 		public var requestID : int;
 		public var fullCollectionName : String; // cstring
 		public var flags : int;
-		public var selector : Object; // document
-		public var update : Object; // document
+		public var selector : Document; // document
+		public var update : Document; // document
 		
-		public function OpUpdate( requestID : int, fullCollectionName : String, flags : int, selector : Object, update : Object ) {
+		public function OpUpdate( requestID : int, fullCollectionName : String, flags : int, selector : Document, update : Document ) {
 			this.requestID = requestID;
 			this.fullCollectionName = fullCollectionName;
 			this.flags = flags;
