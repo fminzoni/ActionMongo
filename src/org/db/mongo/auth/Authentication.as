@@ -17,11 +17,17 @@ package org.db.mongo.auth
 		private var nonceCursor:Cursor;
 		private var authCursor:Cursor;
 		private var credentials:Credentials;
+		private var functionHandler : Function;
 
 		public function Authentication(db:DB,credentials:Credentials)
 		{
 			this.db = db;
-			this.credentials = credentials;
+			this.credentials = credentials;			
+		}
+		
+		public function login(functionHandler: Function):void
+		{
+			this.functionHandler=functionHandler;
 			getNonce();
 		}
 
@@ -54,13 +60,19 @@ package org.db.mongo.auth
 		}	
 		
 		private function getAuthenticateHandler():void
-		{			
+		{
+			var logged:Boolean=false
 			var documents : ArrayCollection = new ArrayCollection();
 			for each( var reply : OpReply in authCursor.replies ) {
 				documents.addAll( new ArrayCollection( reply.documents ) );
 			}
 			if (documents.length == 1 && documents[0].ok == 1)
-				trace("auth ok");					
+			{
+				trace("auth ok");
+				logged=true;
+			}
+				
+			functionHandler(logged);
 		}
 	}
 }
