@@ -78,5 +78,10 @@ package org.db.mongo
 		/*public function executeCommand() : Object {
 			blah;
 		}*/
+		
+		public function close():void
+		{
+			socket.close();
+		}
 	}
 }
