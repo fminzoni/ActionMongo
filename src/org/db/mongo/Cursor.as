@@ -39,7 +39,6 @@ package org.db.mongo
 	public class Cursor
 	{
 		
-		private var mongo : Mongo;
 		private var dbName : String;
 		private var collName : String;
 		private var query : OpQuery;
@@ -51,7 +50,6 @@ package org.db.mongo
 		public var replies : Array = new Array();
 		
 		public function Cursor( dbName : String, collName : String, query : OpQuery, queryID : int, readAll : Function = null ) {
-			this.mongo = mongo;
 			this.dbName = dbName;
 			this.collName = collName;
 			this.query = query;
