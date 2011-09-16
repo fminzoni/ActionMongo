@@ -24,9 +24,11 @@
 package org.db.mongo
 {
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	
+	import org.db.mongo.mwp.OpInsert;
 	import org.db.mongo.mwp.OpQuery;
 
 	public class Collection
@@ -65,5 +67,13 @@ package org.db.mongo
 		}
 		
 		
+		public function insert(documents:Array, returnFieldSelector:Object = null, readAll:Function = null):void {
+			var insertID:int = mongo.getUniqueID();
+			var opinsert:OpInsert = new OpInsert(insertID, dbName + "." + collName, documents);
+			
+			var insertDoc:InsertDocument = new InsertDocument(opinsert);
+			
+			insertDoc.insertDocument(socket);
+		}
 	}
 }
