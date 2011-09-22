@@ -28,8 +28,10 @@ package org.db.mongo
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	
+	import org.db.mongo.mwp.OpDelete;
 	import org.db.mongo.mwp.OpInsert;
 	import org.db.mongo.mwp.OpQuery;
+	import org.db.mongo.mwp.OpUpdate;
 
 	public class Collection
 	{
@@ -75,5 +77,37 @@ package org.db.mongo
 			
 			insertDoc.insertDocument(socket);
 		}
+		
+		public function deleteDoc(documents:Array, returnFieldSelector:Object = null, readAll:Function = null):void {
+			var deleteID:int = mongo.getUniqueID();
+			var opDelete:OpDelete = new OpDelete(deleteID, dbName + "." + collName, 0, documents[0] as Document);
+			
+			var deleteDoc:DeleteDocument = new DeleteDocument(opDelete);
+			
+			deleteDoc.deleteDocument(socket);
+		}
+		
+		
+		public function update(documents:Array, returnFieldSelector:Object = null, readAll:Function = null):void {
+			var requestID:int = mongo.getUniqueID();
+			
+			var doc:Document = documents[0];
+			var updateId:Document = new Document();
+			var updateQuery:Document = new Document();
+			
+			for ( var i:int=0;i< doc.FieldsCount ; i++)
+			{
+				if(doc.getKeyAt(i)=="_id")
+					updateId.put(doc.getKeyAt(i),doc.getValueAt(i));
+				else
+					updateQuery.put(doc.getKeyAt(i),doc.getValueAt(i));
+			}
+			var opUpdate:OpUpdate = new OpUpdate(requestID, dbName + "." + collName, 0, updateId,updateQuery);
+			
+			var updateDoc:UpdateDocument = new UpdateDocument(opUpdate);
+			
+			updateDoc.updateDocument(socket);
+		}
+		
 	}
 }
