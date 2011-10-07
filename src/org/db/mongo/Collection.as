@@ -50,9 +50,9 @@ package org.db.mongo
 			this.socket = socket;
 		}
 		
-		public function find( query : Document, returnFieldSelector : Document = null, readAll : Function = null ) : Cursor {
+		public function find( query : Document, returnFieldSelector : Document = null, readAll : Function = null, numberToSkip : int = 0, numberToReturn : int = 0 ) : Cursor {
 			var queryID : int = mongo.getUniqueID();
-			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + collName, 0, 0, query, returnFieldSelector );
+			var opquery : OpQuery = new OpQuery( queryID, 0, dbName + "." + collName, numberToSkip, numberToReturn, query, returnFieldSelector );
 			var cursor : Cursor = new Cursor( dbName, collName, opquery, queryID, readAll );
 			cursor.sendQuery(socket);			
 			
