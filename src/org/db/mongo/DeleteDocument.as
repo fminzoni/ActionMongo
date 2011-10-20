@@ -24,56 +24,36 @@
 
 package org.db.mongo
 {
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
 	import flash.net.Socket;
 	
-	import org.db.mongo.mwp.OpInsert;
+	import org.db.mongo.mwp.OpDelete;
 	
 	/**
 	 * Insert documents to mongoDb collection.
 	 *  
-	 * @author Michael Crosby
+	 * @author Andrea Stucchi
 	 * 
 	 */	
-	public class InsertDocument
+	
+	public class DeleteDocument
 	{
-		private var opInsert:OpInsert;
+
+		private var opDelete:OpDelete
 		
-		public function InsertDocument(opInsert:OpInsert)
+		public function DeleteDocument(opDelete:OpDelete)
 		{
-			this.opInsert = opInsert;
+			this.opDelete=opDelete;
 		}
-		
-		/**
-		 * Socket connection event to writebytes to mongodb.
-		 *  
-		 * @param e
-		 * 
-		 */		
-		public function insertDocument(socket:Socket):void {
-			
-/*			if (!socket.hasEventListener(ProgressEvent.SOCKET_DATA))
-				socket.addEventListener( ProgressEvent.SOCKET_DATA, readData );
-			if (!socket.hasEventListener(IOErrorEvent.IO_ERROR))
-				socket.addEventListener( IOErrorEvent.IO_ERROR, insertError );*/
-			
-			socket.writeBytes(opInsert.toBinaryMsg());
-			socket.flush();
-		}
-		
-/*		private function readData(e:ProgressEvent):void
-		{
-			//Dispatch event
-			trace('Progress event');
-		}
-		
-		private function insertError(e:IOErrorEvent):void
-		{
-			//Dispatch event
-			trace('Insert error');
-		}	*/	
-		
+		/**		
+		* Socket connection event to writebytes to mongodb.
+			*  
+			* @param e
+		* 
+		*/		
+			public function deleteDocument(socket:Socket):void 
+			{
+				socket.writeBytes(opDelete.toBinaryMsg());
+				socket.flush();
+			}
 	}
 }
